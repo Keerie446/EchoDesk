@@ -170,7 +170,7 @@ def generate_reply_node(state: ConversationState) -> dict[str, str]:
         )
         client = Groq(api_key=api_key)
         completion = client.chat.completions.create(
-            model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"),
             messages=[
                 {
                     "role": "system",
@@ -188,6 +188,8 @@ def generate_reply_node(state: ConversationState) -> dict[str, str]:
                 {"role": "user", "content": f"Policy context:\n{context}\n\nCustomer: {state['message']}"},
             ],
             temperature=0.2,
+            max_completion_tokens=512,
+            reasoning_effort="low",
         )
         response = completion.choices[0].message.content or "I could not form a response from the policy context."
         return {

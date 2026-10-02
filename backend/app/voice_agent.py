@@ -80,10 +80,15 @@ async def echodesk_agent(ctx: agents.JobContext) -> None:
             model=os.getenv("GROQ_STT_MODEL", "whisper-large-v3-turbo"),
             language="en",
         ),
-        llm=groq.LLM(model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")),
-        tts=groq.TTS(
-            model=os.getenv("GROQ_TTS_MODEL", "playai-tts"),
-            voice=os.getenv("GROQ_TTS_VOICE", "Arista-PlayAI"),
+        llm=groq.LLM(
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"),
+            max_completion_tokens=512,
+            reasoning_effort="low",
+        ),
+        tts=inference.TTS(
+            model=os.getenv("LIVEKIT_TTS_MODEL", "cartesia/sonic-3"),
+            voice=os.getenv("LIVEKIT_TTS_VOICE", "a167e0f3-df7e-4d52-a9c3-f949145efdab"),
+            language="en",
         ),
         turn_handling=agents.TurnHandlingOptions(
             turn_detection=inference.TurnDetector(),
