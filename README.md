@@ -130,7 +130,7 @@ Vercel hosts the Vite frontend; it does **not** run the persistent local-Qdrant 
 
 1. Start the API and agent worker using the commands above.
 2. In another terminal, run `cloudflared tunnel --url http://localhost:8000`. Keep it running and copy the generated HTTPS `trycloudflare.com` URL.
-3. Import `Keerie446/EchoDesk` in Vercel and set **Root Directory** to `frontend`. Vercel detects Vite; build command is `npm run build`, output directory is `dist`. `frontend/vercel.json` configures SPA routing and browser microphone/screen permissions.
+3. Import `Keerie446/EchoDesk` in Vercel and leave **Root Directory** at the repository root. The root `vercel.json` explicitly sets the Vite framework, installs/builds from `frontend`, and publishes `frontend/dist`; this prevents Vercel from treating `backend/app/main.py` as a serverless FastAPI app. It also configures SPA routing and browser microphone/screen permissions.
 4. Set Vercel project environment variable `VITE_API_BASE_URL` to the tunnel URL and deploy.
 5. Add both `http://localhost:5173` and the Vercel site origin to local `FRONTEND_ORIGINS` in `.env`, then restart FastAPI.
 6. Open the Vercel URL and allow microphone access. Your computer, API, worker, and tunnel must stay online for voice and vision features.
