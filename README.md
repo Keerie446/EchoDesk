@@ -35,38 +35,104 @@ The response includes the final graph route, status, citations, and transcript. 
 
 Run the text-graph safety tests with `.venv/bin/pip install -r requirements-dev.txt` followed by `.venv/bin/python -m pytest` from the repository root.
 
-## Milestone 4: LiveKit voice
+# EchoDesk
 
-The browser joins a LiveKit Cloud room using a short-lived token from `/voice/token`; the token can join/publish/subscribe only in its session room and explicitly dispatches `echodesk-agent`. The separate worker uses Groq Whisper for speech recognition, Groq-hosted `openai/gpt-oss-20b` for language generation, and LiveKit Inference Cartesia TTS for speech. The current Groq key's model catalog does not include a conversational Llama model, so GPT-OSS is an explicit account-specific fallback; switch `GROQ_MODEL` to an available Llama model when the Groq account enables one. Each finalized transcript turn is sent to the existing `/conversation/turn` LangGraph endpoint; the voice agent speaks that response rather than answering outside the approval and escalation routing. LiveKit's default voice activity and interruption handling allow the customer to barge in while the agent is speaking.
+## 💡 Project Overview
 
-The API, worker, and frontend are three separate local processes. Keep the API running while the worker is active: with local embedded Qdrant, the voice worker calls the API over HTTP so only the API process opens `.qdrant/`. Live voice cannot start without valid LiveKit Cloud credentials and a Groq API key; no credentials are bundled in this repository.
+EchoDesk is a real-time voice and multimodal customer-support agent MVP for AI Build Challenge 2026, PS-05. Customers can talk to the agent, interrupt it, share a photo or one-frame screen snapshot during the call, and receive policy-grounded guidance with citations.
 
-## Vercel frontend with local API
+The LangGraph flow routes support questions through Qdrant retrieval, image uploads through on-demand vision analysis, and unresolved requests to escalation with conversation history. Refund, cancellation, and account-change requests visibly stop at `pending_approval`; the MVP does not execute those actions.
 
-Vercel hosts the Vite static frontend. It does not host the persistent local-Qdrant API or the long-running LiveKit agent worker in this setup. For a free demo without Docker or a paid app host, keep FastAPI and the worker running on your Mac and expose the API with a temporary Cloudflare Quick Tunnel.
+Demo scenarios:
 
-1. Install `cloudflared` with Homebrew if needed: `brew install cloudflared`.
-2. Start FastAPI and the LiveKit worker using the local commands above.
-3. In another terminal, expose the API: `cloudflared tunnel --url http://localhost:8000`. Copy its generated `https://…trycloudflare.com` URL and keep the tunnel running.
-4. In Vercel, import `Keerie446/EchoDesk` from GitHub and set the project **Root Directory** to `frontend`. Vercel should detect Vite; build command is `npm run build`, output directory is `dist`.
-5. Add Vercel build environment variable `VITE_API_BASE_URL` with the tunnel URL, then deploy.
-6. Add the deployed Vercel origin to local `FRONTEND_ORIGINS` in `.env` (for example, `http://localhost:5173,https://your-project.vercel.app`) and restart FastAPI.
-7. Open the Vercel URL, allow microphone access, and start the call. The Mac, API, worker, and tunnel must stay awake/connected for voice and image features.
+1. Ask about a billing dispute and get the matching policy citation.
+2. Describe a device-pairing problem, share a photo/screen snapshot, and get a troubleshooting response on the same call.
+3. Request a refund and confirm the response stays pending approval without issuing one.
 
-`frontend/vercel.json` includes SPA rewrites and browser microphone/screen-capture permissions. Quick Tunnels use temporary URLs and are for demo use, not stable public hosting. When the tunnel URL changes, update `VITE_API_BASE_URL` in Vercel and redeploy. The tunnel publicly exposes the local API without user authentication, so shut it down after the demo. LiveKit media still uses the configured LiveKit Cloud project; only the agent worker runs locally.
+## 🛠️ Technologies Used
 
-## Milestone 5: image and screen context
+- **Frontend:** Vite, JavaScript, LiveKit JavaScript SDK
+- **Backend:** FastAPI, Python
+- **Voice transport and interruption handling:** LiveKit WebRTC and LiveKit Agents
+- **Speech recognition:** Groq Whisper
+- **Conversation model:** Groq-hosted `openai/gpt-oss-20b` for the current account; this account did not expose a conversational Llama model when tested
+- **Speech output:** LiveKit Inference Cartesia TTS
+- **Vision:** Groq vision-capable model, called only when an image is uploaded
+- **Orchestration:** LangGraph
+- **Retrieval:** Qdrant with FastEmbed embeddings and seven sample support-policy documents
 
-While a voice call is active, use **Share image** to choose a PNG, JPEG, or WebP photo/screenshot, or **Share screen** to grant browser permission for a single screen snapshot. Uploads are limited to 4 MB. The API sends that image to the configured `GROQ_VISION_MODEL` only for the upload, then feeds the visual findings into the LangGraph/Qdrant path. The original upload is not written to disk. The browser shows the shared image, visual summary, and policy citations; the connected voice agent speaks the result over LiveKit RPC. Refund, cancellation, and account-change requests still return `pending_approval` and perform no action.
+## ⚙️ Setup & Installation
 
-Vision requires a valid Groq API key and a Groq vision-capable model available to the project. The default model is `meta-llama/llama-4-scout-17b-16e-instruct`; change `GROQ_VISION_MODEL` in `.env` if Groq changes model availability.
+1. Clone the repository and enter it:
 
-## Demo scenarios
+	```sh
+	git clone https://github.com/Keerie446/EchoDesk.git
+	cd EchoDesk
+	```
 
-Run these scenarios with LiveKit and Groq credentials configured:
+2. Create a local environment file and add provider credentials:
 
-1. Plain voice resolution: customer asks why a recent bill is higher; agent retrieves the billing policy and explains the charge.
-2. Image-triggered resolution: customer describes a device pairing issue, chooses **Share image** or **Share screen**, and the agent inspects the indicator light, cites the device troubleshooting guide, and speaks the next step on the same call.
-3. Approval gate: customer requests a refund; the agent cites the refund policy, presents a pending-approval state, and takes no action before approval.
+	```sh
+	cp .env.example .env
+	```
 
-Any later refund, cancellation, or account change must remain visibly pending until approval is granted.
+	Set `GROQ_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` in `.env`. Never commit `.env` or paste secrets into chat. Leave `QDRANT_URL` blank to use local persistent Qdrant; set it and `QDRANT_API_KEY` only when using Qdrant Cloud.
+
+3. Install backend dependencies:
+
+	```sh
+	python3 -m venv .venv
+	.venv/bin/pip install -r requirements.txt
+	```
+
+4. Install frontend dependencies:
+
+	```sh
+	cd frontend
+	npm install
+	cd ..
+	```
+
+5. For an internet-accessible demo without a paid app host, install Cloudflare Tunnel (`brew install cloudflared`). Vercel serves only the static frontend; FastAPI, local Qdrant, and the LiveKit agent worker still need a running host. See **How to Run** below.
+
+## 🚀 How to Run the Project
+
+### Run locally
+
+Start each service in a separate terminal from the repository root:
+
+```sh
+.venv/bin/uvicorn backend.app.main:app --reload --port 8000
+```
+
+```sh
+.venv/bin/python -m backend.app.voice_agent dev
+```
+
+```sh
+cd frontend && npm run dev
+```
+
+Open the Vite URL printed in the terminal, allow microphone access, and click **Start voice call**. While connected, use **Share image** or **Share screen**. Image uploads accept PNG, JPEG, or WebP up to 4 MB. The first RAG request downloads the FastEmbed `all-MiniLM-L6-v2` model and indexes the support policies under `.qdrant/`.
+
+API health: `http://localhost:8000/health`.
+
+Run automated tests from the repository root:
+
+```sh
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/python -m pytest
+```
+
+### Deploy the frontend on Vercel (free)
+
+Vercel hosts the Vite frontend; it does **not** run the persistent local-Qdrant API or the long-running LiveKit agent worker in this setup.
+
+1. Start the API and agent worker using the commands above.
+2. In another terminal, run `cloudflared tunnel --url http://localhost:8000`. Keep it running and copy the generated HTTPS `trycloudflare.com` URL.
+3. Import `Keerie446/EchoDesk` in Vercel and set **Root Directory** to `frontend`. Vercel detects Vite; build command is `npm run build`, output directory is `dist`. `frontend/vercel.json` configures SPA routing and browser microphone/screen permissions.
+4. Set Vercel project environment variable `VITE_API_BASE_URL` to the tunnel URL and deploy.
+5. Add both `http://localhost:5173` and the Vercel site origin to local `FRONTEND_ORIGINS` in `.env`, then restart FastAPI.
+6. Open the Vercel URL and allow microphone access. Your computer, API, worker, and tunnel must stay online for voice and vision features.
+
+Cloudflare Quick Tunnel URLs change and are intended for demos, not stable hosting. The tunnel publicly exposes the local API without user authentication; stop it after the demo. LiveKit media uses the configured LiveKit project. No provider secrets belong in Vercel's frontend environment; only the public API URL is needed there.
