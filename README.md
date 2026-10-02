@@ -41,6 +41,20 @@ The browser joins a LiveKit Cloud room using a short-lived token from `/voice/to
 
 The API, worker, and frontend are three separate local processes. Keep the API running while the worker is active: with local embedded Qdrant, the voice worker calls the API over HTTP so only the API process opens `.qdrant/`. Live voice cannot start without valid LiveKit Cloud credentials and a Groq API key; no credentials are bundled in this repository.
 
+## Vercel frontend with local API
+
+Vercel hosts the Vite static frontend. It does not host the persistent local-Qdrant API or the long-running LiveKit agent worker in this setup. For a free demo without Docker or a paid app host, keep FastAPI and the worker running on your Mac and expose the API with a temporary Cloudflare Quick Tunnel.
+
+1. Install `cloudflared` with Homebrew if needed: `brew install cloudflared`.
+2. Start FastAPI and the LiveKit worker using the local commands above.
+3. In another terminal, expose the API: `cloudflared tunnel --url http://localhost:8000`. Copy its generated `https://…trycloudflare.com` URL and keep the tunnel running.
+4. In Vercel, import `Keerie446/EchoDesk` from GitHub and set the project **Root Directory** to `frontend`. Vercel should detect Vite; build command is `npm run build`, output directory is `dist`.
+5. Add Vercel build environment variable `VITE_API_BASE_URL` with the tunnel URL, then deploy.
+6. Add the deployed Vercel origin to local `FRONTEND_ORIGINS` in `.env` (for example, `http://localhost:5173,https://your-project.vercel.app`) and restart FastAPI.
+7. Open the Vercel URL, allow microphone access, and start the call. The Mac, API, worker, and tunnel must stay awake/connected for voice and image features.
+
+`frontend/vercel.json` includes SPA rewrites and browser microphone/screen-capture permissions. Quick Tunnels use temporary URLs and are for demo use, not stable public hosting. When the tunnel URL changes, update `VITE_API_BASE_URL` in Vercel and redeploy. The tunnel publicly exposes the local API without user authentication, so shut it down after the demo. LiveKit media still uses the configured LiveKit Cloud project; only the agent worker runs locally.
+
 ## Milestone 5: image and screen context
 
 While a voice call is active, use **Share image** to choose a PNG, JPEG, or WebP photo/screenshot, or **Share screen** to grant browser permission for a single screen snapshot. Uploads are limited to 4 MB. The API sends that image to the configured `GROQ_VISION_MODEL` only for the upload, then feeds the visual findings into the LangGraph/Qdrant path. The original upload is not written to disk. The browser shows the shared image, visual summary, and policy citations; the connected voice agent speaks the result over LiveKit RPC. Refund, cancellation, and account-change requests still return `pending_approval` and perform no action.
