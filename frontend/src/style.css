@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'Manrope', sans-serif;
+  color: #202721;
+  background: #f4f5f1;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #202721;
+  --muted: #747b73;
+  --green: #287b54;
+  --line: #dfe3dc;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+.shell { min-height: 100vh; padding: 0 7.2vw; display: flex; flex-direction: column; }
+.topbar { height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.wordmark { color: var(--ink); font-size: 21px; font-weight: 800; letter-spacing: 0; text-decoration: none; }
+.wordmark span { color: var(--green); }
+.environment, .eyebrow, footer, .status, .setup-note { font-family: 'DM Mono', monospace; }
+.environment { display: flex; align-items: center; gap: 9px; color: #626a61; font-size: 10px; letter-spacing: .07em; }
+.environment i, .status i { width: 7px; height: 7px; border-radius: 50%; background: #c5a641; }
+.workspace { flex: 1; width: min(1100px, 100%); margin: 0 auto; padding: 11vh 0 9vh; display: grid; grid-template-columns: .86fr 1.14fr; align-items: center; gap: 9%; }
+.eyebrow { margin: 0; color: var(--green); font-size: 10px; font-weight: 500; letter-spacing: .1em; }
+h1 { margin: 23px 0 19px; font-size: clamp(42px, 5vw, 66px); line-height: 1.08; letter-spacing: 0; font-weight: 600; }
+.description { max-width: 340px; color: var(--muted); font-size: 15px; line-height: 1.8; }
+.call-panel { min-height: 390px; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 5px; box-shadow: 0 14px 45px #253b2510; }
+.panel-heading { display: flex; justify-content: space-between; align-items: center; padding: 22px 24px; border-bottom: 1px solid #eceeea; }
+.panel-heading .eyebrow { font-size: 9px; }
+h2 { margin: 6px 0 0; font-size: 16px; font-weight: 700; }
+.status { display: inline-flex; align-items: center; gap: 7px; color: #8b7629; font-size: 10px; }
+.status.connected { color: var(--green); }
+.status.connected i { background: #39996a; }
+.status.disconnected { color: #a3443c; }
+.status.disconnected i { background: #c15b51; }
+.conversation { flex: 1; min-height: 205px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #929990; font-size: 12px; }
+.empty-mark { width: 34px; height: 34px; display: grid; place-items: center; margin-bottom: 5px; border: 1px solid #dfe7df; border-radius: 50%; color: var(--green); font-weight: 800; }
+.transcript { align-self: stretch; display: flex; flex-direction: column; gap: 13px; max-height: 215px; overflow-y: auto; margin: 0; padding: 22px 24px; list-style: none; }
+.transcript:empty { display: none; }
+.transcript-line { max-width: 88%; color: var(--ink); font-size: 12px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.transcript-line.agent { align-self: flex-start; }
+.transcript-line.customer { align-self: flex-end; padding: 9px 11px; border-radius: 4px; background: #f0f4ef; }
+.transcript-speaker { display: block; margin-bottom: 3px; color: var(--green); font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase; }
+.composer { display: flex; justify-content: space-between; align-items: center; margin: 0 16px; padding: 8px 8px 8px 14px; border: 1px solid var(--line); border-radius: 4px; color: #7b837a; font-size: 11px; }
+.call-hint { overflow: hidden; text-overflow: ellipsis; }
+.call-actions { display: flex; align-items: center; gap: 8px; }
+.image-button { min-height: 36px; padding: 0 12px; border: 1px solid #cfd9d0; border-radius: 4px; color: #315f43; background: #f8faf7; font: 600 10px 'DM Mono', monospace; cursor: pointer; }
+.image-button:hover:not(:disabled) { border-color: #83a18a; background: #eff5ef; }
+.image-button:disabled { color: #9da49d; background: #f5f6f3; cursor: not-allowed; }
+.call-button { flex: 0 0 38px; width: 38px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 4px; color: white; background: var(--green); cursor: pointer; transition: background .15s ease, transform .15s ease; }
+.call-button:hover { background: #1d6946; transform: translateY(-1px); }
+.call-button:disabled { background: #aab4aa; cursor: wait; transform: none; }
+.call-button.active { background: #a3443c; }
+.call-button svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.call-button.active svg { transform: rotate(135deg); }
+.remote-audio { display: none; }
+.image-context { display: grid; grid-template-columns: minmax(86px, 120px) 1fr; gap: 13px; margin: 0 16px 12px; padding: 10px; border: 1px solid var(--line); border-radius: 4px; background: #fbfcfa; }
+.image-context[hidden] { display: none; }
+.image-context img { width: 100%; max-height: 112px; aspect-ratio: 1; object-fit: cover; border-radius: 3px; background: #eef1eb; }
+.image-details { min-width: 0; }
+.image-details .eyebrow { font-size: 9px; }
+#visual-summary { margin: 6px 0; color: #515a51; font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.citation-list { display: flex; flex-wrap: wrap; gap: 5px 12px; margin: 0; padding: 0; list-style: none; color: var(--green); font: 9px 'DM Mono', monospace; }
+.citation-list li { overflow-wrap: anywhere; }
+.setup-note { min-height: 44px; margin: 0; padding: 15px 24px 0; color: #8d948c; font-size: 9px; }
+footer { min-height: 52px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); color: #90968f; font-size: 9px; letter-spacing: .06em; }
+
+@media (max-width: 720px) {
+  .shell { padding: 0 22px; }
+  .topbar { height: 66px; }
+  .workspace { padding: 58px 0 50px; grid-template-columns: 1fr; gap: 35px; }
+  h1 { margin: 17px 0 12px; font-size: 48px; }
+  .description { margin: 0; font-size: 14px; }
+  .call-panel { min-height: 355px; }
+  .image-context { grid-template-columns: 76px 1fr; gap: 10px; margin-inline: 12px; }
+  .image-context img { max-height: 82px; }
+  .image-button { padding: 0 8px; font-size: 9px; }
+  footer { font-size: 8px; }
+}

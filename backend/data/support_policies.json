@@ -1,0 +1,44 @@
+[
+  {
+    "id": "returns-exchanges",
+    "title": "Returns and Exchanges",
+    "source": "returns-and-exchanges.md",
+    "text": "Customers may return unused products in their original packaging within 30 calendar days of delivery. Include the order number and all included accessories. A prepaid return label is available through the order page. Once the return arrives, inspection and processing usually take 5 to 7 business days. Items damaged on arrival should be reported within 7 days with photos so support can arrange a replacement or refund review. Personalized items and final-sale products are not returnable unless defective."
+  },
+  {
+    "id": "billing-disputes",
+    "title": "Billing Disputes",
+    "source": "billing-disputes.md",
+    "text": "If a customer sees a duplicate charge, an unfamiliar transaction, or an amount that differs from the checkout total, support should first confirm the order date, last four digits of the payment method, and whether the charge is pending or posted. Pending authorizations can take up to 7 business days to disappear. A posted duplicate or incorrect charge must be sent for billing review, which typically responds within 5 business days. Never request a full card number or security code in chat or on a call."
+  },
+  {
+    "id": "device-troubleshooting",
+    "title": "Device Setup and Troubleshooting",
+    "source": "device-troubleshooting.md",
+    "text": "For a device that will not power on, ask the customer to check the supplied adapter and cable, try a known-working wall outlet, and leave the device charging for 20 minutes. For pairing problems, restart the device and phone, enable Bluetooth, and retry from the companion app while keeping the devices within one meter. Ask for the model label or a photo of the indicator lights when the symptoms are unclear. Stop troubleshooting if the device is unusually hot, swollen, wet, or smells burnt; advise the customer to disconnect power and escalate to product safety support."
+  },
+  {
+    "id": "refund-policy",
+    "title": "Refund Eligibility and Processing",
+    "source": "refund-policy.md",
+    "text": "A refund may be eligible for an order returned within the 30-day return window, an approved billing correction, or an item confirmed damaged or defective. Refunds are sent to the original payment method after the return or billing review is approved. Banks may take 5 to 10 business days to post the credit. Agents must not promise that a refund has been issued before approval and must not initiate or submit a refund without explicit human approval. Explain the eligibility and expected review steps while the request is pending."
+  },
+  {
+    "id": "subscription-cancellation",
+    "title": "Subscription Cancellation",
+    "source": "subscription-cancellation.md",
+    "text": "A subscription cancellation request should be confirmed with the customer, including which plan they mean and whether they understand access generally continues through the paid billing period. Do not claim a cancellation is complete until the account change is approved and confirmed. An agent must pause for explicit human approval before submitting any cancellation or changing an account. If the customer reports an unauthorized subscription, route it to billing review instead of cancelling immediately."
+  },
+  {
+    "id": "shipping-delivery",
+    "title": "Shipping and Delivery Issues",
+    "source": "shipping-delivery.md",
+    "text": "For a late shipment, check the latest carrier scan and the estimated delivery date before offering next steps. If tracking has not updated for 5 business days, open a carrier trace. If tracking says delivered but the parcel is missing, ask the customer to check the delivery location and household members, then allow 24 hours for a possible premature scan before opening an investigation. A replacement or shipping-charge refund requires review; do not promise or submit either action before approval."
+  },
+  {
+    "id": "escalation-guide",
+    "title": "Escalation and Safety Guide",
+    "source": "escalation-guide.md",
+    "text": "Escalate when a customer reports injury, smoke, overheating, electrical damage, suspected account takeover, a charge they do not recognize after initial checks, or a policy exception the agent cannot verify. Before escalation, summarize the customer's stated issue, steps already tried, relevant order or device details they provided, policy findings, and any requested action. Do not ask the customer to repeat information already captured. For immediate danger, advise them to stop using the product and contact local emergency services where appropriate."
+  }
+]

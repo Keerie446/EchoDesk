@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f5f1" />
+    <title>EchoDesk</title>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="wordmark" href="/" aria-label="EchoDesk home">echo<span>desk</span></a>
+        <span class="environment"><i></i> LOCAL DEMO</span>
+      </header>
+      <section class="workspace" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">CUSTOMER SUPPORT / REAL-TIME</p>
+          <h1 id="page-title">A clearer line<br />to a resolution.</h1>
+          <p class="description">Voice, visual context, and support knowledge in one conversation.</p>
+        </div>
+        <section class="call-panel" aria-label="Call session">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">SESSION</p>
+              <h2>Ready when you are</h2>
+            </div>
+            <span class="status" id="api-status"><i></i> Checking API</span>
+          </div>
+          <div class="conversation" id="conversation" aria-live="polite" aria-label="Call transcript">
+            <div class="empty-mark" id="empty-mark" aria-hidden="true">e</div>
+            <p id="empty-message">Start a call to talk with EchoDesk.</p>
+            <ol class="transcript" id="transcript"></ol>
+          </div>
+          <section class="image-context" id="image-context" hidden aria-label="Shared visual context">
+            <img id="shared-image" alt="Image shared during this call" />
+            <div class="image-details">
+              <p class="eyebrow">SHARED IMAGE</p>
+              <p id="visual-summary"></p>
+              <ul id="citation-list" class="citation-list"></ul>
+            </div>
+          </section>
+          <div class="composer">
+            <span class="call-hint" id="call-hint">Live voice is ready to connect.</span>
+            <div class="call-actions">
+              <input id="image-input" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+              <button class="image-button" id="image-button" type="button" disabled title="Share a photo or screenshot during the call">Share image</button>
+              <button class="image-button" id="screen-button" type="button" disabled title="Share one snapshot of your screen during the call">Share screen</button>
+              <button class="call-button" id="call-button" type="button" aria-label="Start voice call" title="Start voice call">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v4m-4 0h8"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="setup-note" id="setup-note">Connecting to the local API…</p>
+        </section>
+      </section>
+      <footer><span>ECHO DESK</span><span>BUILD FAST WITH AI · 2026</span></footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
